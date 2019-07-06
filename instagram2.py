@@ -6,7 +6,6 @@ from urllib.request import urlopen
 import json
 from pandas.io.json import json_normalize
 import pandas as pd, numpy as np
-import ssl
 
 username='rrm777'
 browser = webdriver.Chrome('/Users/kuanysh/Desktop/chromedriver')
