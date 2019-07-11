@@ -10,8 +10,6 @@ from bs4 import BeautifulSoup
 import ssl
 import json
 import re
-import pandas as pd
-import pickle as p
 app = Flask(__name__)
 
 def getInsta(user):
@@ -56,6 +54,7 @@ def getInsta(user):
 
     # instagram user photo
 
+
     data2 = soup.find_all('img', attrs={'data-aos': 'zoom-in'})
     t5 = str(data2[0])
     pos1 = t5.find("https")
@@ -64,12 +63,12 @@ def getInsta(user):
     print(logoUrl)
 
     inst = {
-        'followers': str(r4[0]),
-        'following': str(r4[1]),
-        'posts': str(r4[2]),
-        'avg_likes': str(r1),
-        'avg_comments': str(r2[-2]),
-        'avg_views': str(r3),
+        'followers': r4[0],
+        'following': r4[1],
+        'posts': r4[2],
+        'avg_likes': r1,
+        'avg_comments': r2[-2],
+        'avg_views': r3,
         'img': logoUrl
     }
     return inst
@@ -100,11 +99,11 @@ def getVk(userVk):
     user = {
         "name": data['response']["first_name"],
         "surname": data['response']["last_name"],
-        "sex": str(data['response']["sex"]),
+        "sex": data['response']["sex"],
         "city": data['response']['city']['title'],
-        "last_seen": str(data['response']["last_seen"]['time']),
-        "pages": str(data['response']["counters"]['pages']),
-        "friends": str(data1['response']["count"]),
+        "last_seen": data['response']["last_seen"]['time'],
+        "pages": data['response']["counters"]['pages'],
+        "friends": data1['response']["count"],
         "bdate": data['response']['bdate']
     }
     return user
@@ -116,33 +115,11 @@ def create_task():
     userVk = request.json['vk']
     instaInfo = getInsta(userInsta)
     vkInfo = getVk(userVk)
-
-    sex = int(vkInfo["sex"])
-    bdate = 13
-    friends = int(vkInfo["friends"])
-    city = 10
-    pages = int(vkInfo["pages"])
-    lastSeen = 2
-    followers = int(instaInfo["followers"])
-    following = int(instaInfo["following"])
-    posts = int(instaInfo["posts"])
-    likes = int(instaInfo["avg_likes"])
-    comments = int(instaInfo["avg_comments"])
-    view = int(instaInfo["avg_views"])
-    df = [sex, bdate, friends, city, pages, lastSeen, followers, following, posts, likes, comments, view]
-    df = pd.Series(df)
-    df = df.to_frame()
-    df = df.transpose()
-    prediction = model.predict(df)
     ans = {
         "insta": instaInfo,
-        "vk": vkInfo,
-        "model": str(prediction)
+        "vk": vkInfo
     }
-    print(prediction)
     return jsonify(ans)
 
 if __name__ == '__main__':
-    modelfile = '/Users/kuanysh/Desktop/BitsNBytes/linear.pickle'
-    model = p.load(open(modelfile, 'rb'))
     app.run(debug=True)

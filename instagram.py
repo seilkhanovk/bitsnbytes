@@ -24,17 +24,28 @@ soup = BeautifulSoup(webpage, 'html.parser')
 
 data = soup.find_all('h3', attrs={'style': 'color: white; font-size: 16px; margin-bottom:5px; color:#fff; font-size: 14px;'})
 t1 = str(data[0])
-r1 = re.findall(r'\d+', t1)
+pos1 = t1.find('>') + 2
+pos2 = t1.find("<",pos1,len(t1))
+r1 = t1[pos1:pos2]
+r1 = r1.replace(" ", "")
+r1 = r1.replace(",", "")
+print(r1, "\n")
+# r1 = re.findall(r'\d+', t1)
 
 t2 = str(data[1])
 r2 = re.findall(r'\d+', t2)
 
 if len(data)>2:
     t3 = str(data[2])
-    r3 = re.findall(r'\d+', t3)
-    print(" Average Likes", r1[-2], "\n", "Average Comments", r2[-2], "\n", "Average Views", r3[-2])
+    pos1 = t3.find('>') + 2
+    pos2 = t3.find("<",pos1,len(t1))
+    r3 = t3[pos1:pos2]
+    r3 = r3.replace(" ", "")
+    r3 = r3.replace(",", "")
+    # r3 = re.findall(r'\d+', t3)
+    print(" Average Likes", r1, "\n", "Average Comments", r2[-2], "\n", "Average Views", r3)
 else :
-    print(" Average Likes", r1[-2], "\n", "Average Comments", r2[-2], "\n")
+    print(" Average Likes", r1, "\n", "Average Comments", r2[-2], "\n")
 
 data1 = soup.find_all('script')
 t4 = str(data1[11])
